@@ -12,7 +12,19 @@ describe("routes : static", () => {
                 expect(res.statusCode).toBe(200);
 
                 done();
-            })
-        })
-    })
+            });
+        });
+    });
+
+    describe("GET /marco", () => {
+        it("should return status 200, and the body should read polo", (done) => {
+
+            request.get(base, (err, res, body) => {
+                expect(res.statusCode).toBe(200);
+                expect(body).toBe("polo");
+
+                done();
+            });
+        });
+    });
 })
