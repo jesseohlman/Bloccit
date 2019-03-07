@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Rule.associate = function(models) {
     // associations can be defined here
-    Banner.belongsTo(models.Topic, {
+    Rule.belongsTo(models.Topic, {
       foreignKey: "topicId",
       onDelete: "CASCADE",
     });
