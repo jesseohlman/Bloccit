@@ -24,7 +24,7 @@ module.exports = {
         if(req.method === "POST") {
 
             req.checkBody("title", "must be at least 5 characters long").isLength({min: 5});
-            req.checkBody("body", "must be at least 10 characters in length").isLength({min: 10});
+            req.checkBody("description", "must be at least 10 characters in length").isLength({min: 10});
         }
 
         const errors = req.validationErrors();

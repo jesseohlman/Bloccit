@@ -168,6 +168,7 @@ describe("routes : topics", () => {
             where: { id: this.topic.id }
           })
           .then((topic) => {
+            expect(topic).not.toBeNull();
             expect(topic.title).toBe("JavaScript Frameworks");
             done();
           });
