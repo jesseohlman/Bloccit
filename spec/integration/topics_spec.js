@@ -77,6 +77,30 @@ describe("routes : topics", () => {
           });
         });
       });
+
+      it("should not create a new topic if validation fails", (done) => {
+        const options = {
+          url: `${base}create`,
+          form: {
+            title: "as",
+            description: "bo"
+          }
+        };
+
+        request.post(options,
+          (err, res, body) => {
+
+            Topic.findOne({where: {title: "as"}})
+            .then((topic) => {
+              expect(topic).toBeNull();
+              done();
+            })
+            .catch((err) => {
+              console.log(err);
+              done();
+            })
+          })
+      })
     });
 
     describe("GET /topics/:id", () => {
@@ -144,6 +168,7 @@ describe("routes : topics", () => {
             where: { id: this.topic.id }
           })
           .then((topic) => {
+            expect(topic).not.toBeNull();
             expect(topic.title).toBe("JavaScript Frameworks");
             done();
           });
