@@ -4,7 +4,7 @@ const server = require("../../src/server");
 const base = "http://localhost:3000/users/";
 const User = require("../../src/db/models").User;
 
-describe("routes : useres", () => {
+describe("routes : users", () => {
 
     beforeEach((done) => {
         sequelize.sync({force: true})
