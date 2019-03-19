@@ -8,6 +8,7 @@ module.exports = {
     },
 
     create(req, res, next) {
+
         let newUser = {
             email: req.body.email,
             password: req.body.password,
@@ -16,6 +17,7 @@ module.exports = {
 
         userQueries.createUser(newUser, (err, user) => {
             if(err){
+                //console.log("not here");
                 req.flash("error", err);
                 res.redirect("/users/sign_up");
             } else {

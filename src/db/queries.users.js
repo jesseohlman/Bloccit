@@ -12,9 +12,10 @@ module.exports = {
             password: hashedPassword
         })
         .then((user) => {
-            callback(ull, user);
+            callback(null, user);
         })
         .catch((err) => {
+            //console.log("not here");
             callback(err);
         })
     }
