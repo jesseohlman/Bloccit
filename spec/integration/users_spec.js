@@ -59,7 +59,7 @@ describe("routes : users", () => {
                 {
                 url: base,
                 form: {
-                    emal: "no",
+                    email: "no",
                     password: "1234567890"
                 }
             },
