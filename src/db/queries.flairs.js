@@ -24,4 +24,16 @@ module.exports = {
             callback(err);
         })
     },
+
+    deleteFlair(id, callback){
+        return Flair.destroy({
+            where: {id}
+        })
+        .then((topic) => {
+            callback(null, topic);
+        })
+        .catch ((err) => {
+            callback(err);
+        })
+    },
 }

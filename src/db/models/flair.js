@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     name: {
       type: DataTypes.STRING,
       allowNull: false},
- /* topicId: {
+   topicId: {
     type: DataTypes.INTEGER,
     onDelete: "CASCADE",
     references: {
@@ -15,14 +15,14 @@ module.exports = (sequelize, DataTypes) => {
       key: "id",
       as: "topicId",
     }
-  }*/
+  }
   },{});
   Flair.associate = function(models) {
     // associations can be defined here
-    /*Flair.belongsTo(models.Topic, {
+    Flair.belongsTo(models.Topic, {
       foreignKey: "topicId",
       onDelete: "CASCADE"
-    });*/
+    });
   };
   return Flair;
 };

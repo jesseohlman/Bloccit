@@ -3,8 +3,9 @@
 
  const flairController = require("../controllers/flairController");
 
- router.get("/topics/create/flairs", flairController.index);
- router.get("/topics/create/flairs/new", flairController.new);
- router.post("/topics/create/flairs/create", flairController.create);
+ router.get("/topics/:topicId/flairs", flairController.index);
+ router.get("/topics/:topicId/flairs/new", flairController.new);
+ router.post("/topics/:topicId/flairs/create", flairController.create);
+ 
 
  module.exports = router;

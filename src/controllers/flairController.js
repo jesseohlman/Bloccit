@@ -25,9 +25,9 @@
 
         flairQueries.addFlair(newFlair, (err, flair) => {
             if(err){
-                res.redirect(500, "/topics/create/flairs");
+                res.redirect(500, "/topics/:topicId/flairs");
               } else {
-                res.redirect(303, `/topics/create`);
+                res.redirect(303, `/topics/:topicId`);
               }
         });
     },
