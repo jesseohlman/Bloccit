@@ -39,36 +39,22 @@ describe("routes : flairs", () => {
         });
     });
 
-    describe("GET /topics/create/flairs", () => {
-
-        it("should desplay all existing flairs", (done) => {
-            request.get(`${base}/create/flairs`, (err, res, body) => {
-                expect(err).toBeNull();
-                expect(body).toContain("I Love Toys!");
-                done();
-            });
-        });
-    });
-
-    /*describe("GET /topics/create/flairs/new", () => {
+ /*   describe("GET /topics/create/flairs/new", () => {
 
         it("should render a new flair form", (done) => {
-          request.get(`${base}/create/flairs/new`, (err, res, body) => {
-            if(err){
-                console.log(err);
-            }
+          request.get(`${base}/:topicId/flairs/new`, (err, res, body) => {
             expect(err).toBeNull();
             expect(body).toContain("New Falir");
             done();
           });
         });
-      });
+      });*/
 
-    describe("POST /topics/create/flairs/create", () => {
+    describe("POST /topics/:topicId/flairs/create", () => {
 
         it("should create a new flair and redirect", (done) => {
             const options = {
-                url: `${base}/create/flairs/create`,
+                url: `${base}/:topicId/flairs/create`,
                 form: {
                     name: "Toys",
                     color: "Yellow"
@@ -88,6 +74,6 @@ describe("routes : flairs", () => {
                 });
             });
         });
-      });*/
+      });
 
 })

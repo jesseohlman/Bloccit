@@ -20,7 +20,8 @@
 
         let newFlair = {
             name: req.body.name,
-            color: req.body.color
+            color: req.body.color,
+            topicId: req.params.id
         };
 
         flairQueries.addFlair(newFlair, (err, flair) => {
