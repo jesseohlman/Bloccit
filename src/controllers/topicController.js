@@ -72,14 +72,11 @@ module.exports = {
       if(err || topic == null){
         res.redirect(404, "/");
       } else {
-        console.log(`${req.user} \n\n\n\n`); 
         const authorized = new Authorizer(req.user, topic).edit();
 
         if(authorized){
-          console.log("ssssssssssssssssssssssssssssssssssssssss")
           res.render("topics/edit", {topic});
         } else {
-          console.log("ffffffffffffffffffffffffffffffffffffffffff");
           req.flash("You are not authorized to do that.");
           res.redirect(`/topics/${req.params.id}`)
         }
