@@ -47,6 +47,18 @@ module.exports = {
             callback("Forbidden");
         }
         });
+    },
+
+    deletePost(id, callback){
+        return Post.destroy({
+            where: {id}
+        })
+        .then((deletedRecordsCount) => {
+            callback(null, deletedRecordsCount);
+        })
+        .catch((err) => {
+            callback(err);
+        })
     }
     
 }
