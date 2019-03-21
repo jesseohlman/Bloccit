@@ -56,23 +56,25 @@ module.exports = {
 
     edit(req, res, next){
 
-        const authorized = new Authorizer(req.user).edit();
+        
 
-        if(authorized){
-
-            postQueries.getPost(req.params.id, (err, post) => {
-                if(err || post == null){
-                    res.redirect(404, "/");
-                } else {
-    //{post} passes the post into the ejs file so it can access its properties
-                    res.render("posts/edit", {post});
-                }
-            });
-
+    postQueries.getPost(req.params.id, (err, post) => {
+        if(err || post == null){
+            res.redirect(404, "/");
         } else {
-            req.flash("You ar not authorized to do that.");
-            res.redirect(`/topics/${req.params.id}`);
-        }
+    //{post} passes the post into the ejs file so it can access its properties
+                    
+        const authorized = new Authorizer(req.user, post).edit();
+
+            if(authorized){
+                res.render("posts/edit", {post});
+            } else {
+                req.flash("You ar not authorized to do that.");
+                res.redirect(`/topics/${req.params.id}`);
+            }
+                }
+
+        });
 
         
     },
