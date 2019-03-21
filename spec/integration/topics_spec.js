@@ -38,14 +38,18 @@ describe("routes : topics", () => {
             role: "admin"
           })
           .then((user) => {
-            request.get({
+            request.get({         
               url: "http://localhost:3000/auth/fake",
               form: {
-                role: user.role,
+                role: user.role,    
                 userId: user.id,
                 email: user.email
               }
-            });
+            },
+              (err, res, body) => {
+                done();
+              }
+            );
           });
         });
   
@@ -227,10 +231,10 @@ describe("routes : topics", () => {
 
     describe("GET /topics/new", () => {
 
-     it("should render a new topic form", (done) => {
+     it("should not render a new topic form", (done) => {
       request.get(`${base}new`, (err, res, body) => {
         expect(err).toBeNull();
-        expect(body).toContain("New Topic");
+        expect(body).not.toContain("New Topic");
         done();
       });
      });
@@ -308,7 +312,7 @@ describe("routes : topics", () => {
    
    describe("POST /topics/:id/update", () => {
 
-     it("should update the topic with the given values", (done) => {
+     it("should not update the topic with the given values", (done) => {
        const options = {
          url: `${base}${this.topic.id}/update`,
          form:{
