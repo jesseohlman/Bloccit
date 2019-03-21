@@ -14,7 +14,7 @@ module.exports = class ApplicationPolicy {
     }
 
     new() {
-        return this.user != null
+        return !!this.user;
     }
 
     create() {
