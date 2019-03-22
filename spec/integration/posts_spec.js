@@ -27,13 +27,19 @@ describe("routes : posts", () => {
               .then((user) => {
                 this.user = user;
         
+                User.create({
+                  email: "tarman@tesla.com",
+                  password: "Rekkie4lyfe",
+                  role: "member"
+                }).then((user) => {
+
               Topic.create({
                 title: "Winter Games",
                 description: "Post your Winter Games stories.",
               posts: [{
                 title: "Snowball Fighting",
                 body: "So much snow!",
-                userId: this.user.id
+                userId: 2
                 //added one so the current user is not the owner
               }]
             }, {
@@ -61,6 +67,7 @@ describe("routes : posts", () => {
                 .catch((err) => {
                   console.log(err);
                   done();
+                      })
                     })
                   })
                 })
@@ -176,6 +183,27 @@ describe("routes : posts", () => {
               });
           });
         });
+
+        describe("POST /topics/:topicId/posts/:id/destroy", () => {
+
+          it("should not delete the post with the associated ID", (done) => {
+        
+            expect(this.post.id).toBe(1);
+            
+            request.post(`${base}/${this.topic.id}/posts/${this.post.id}/destroy`, (err, res, body) => {
+        
+              Post.findById(1)
+              //edit posts/show view so that non-owners/admins don't see 
+              //the delete option
+              .then((post) => {
+                expect(err).toBeNull();
+                expect(post).not.toBeNull();
+                done();
+              })
+            });
+          });
+        });
+
       });
  //end member section
 
@@ -299,6 +327,25 @@ describe("GET /topics/:topicId/posts/:id", () => {
           expect(body).toContain("Snowball Fighting");
           done();
       });
+  });
+});
+
+describe("POST /topics/:topicId/posts/:id/destroy", () => {
+
+  it("should delete the post with the associated ID", (done) => {
+
+    expect(this.post.id).toBe(1);
+    expect(this.post.userId).toBe(this.user.id);
+
+    request.post(`${base}/${this.topic.id}/posts/${this.post.id}/destroy`, (err, res, body) => {
+
+      Post.findById(1)
+      .then((post) => {
+        expect(err).toBeNull();
+        expect(post).toBeNull();
+        done();
+      })
+    });
   });
 });
   
@@ -445,6 +492,7 @@ describe("POST /topics/:topicId/posts/create", () => {
           body: "I love watching them melt slowly."
         }
       }, (err, res, body) => {
+        expect(this.post.userId).toBe(this.user.id);
         expect(res.statusCode).toBe(302);
         done();
       });
@@ -454,7 +502,8 @@ describe("POST /topics/:topicId/posts/create", () => {
       const options = {
         url: `${base}/${this.topic.id}/posts/${this.post.id}/update`,
         form: {
-          title: "Snowman Building Competition"
+          title: "Snowman Building Competition",
+          body: "So much snow!"
         }
       };
       request.post(options, (err, res, body) => {
@@ -471,7 +520,6 @@ describe("POST /topics/:topicId/posts/create", () => {
       });
     });
   });
-
   
 describe("GET /topics/:topicId/posts/:id", () => {
 
