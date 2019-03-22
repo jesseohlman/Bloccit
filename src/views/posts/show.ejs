@@ -8,11 +8,16 @@
 
         <main>
             <h1><%= post.title %></h1>
+            <% if(currentUser && (currentUser.isAdmin() || currentUser.isOwner())){ %> 
                 <form style="display:initial" action="/topics/<%= post.topicId %>/posts/<%= post.id %>/destroy" method="post">
                     <button type="submit" class="btn btn-danger">Delete</button>
                 </form>
+            <% } %>
             <p><%= post.title %></p>
+            
+            <% if(currentUser && (currentUser.isAdmin() || currentUser.isOwner())){ %> 
             <a href="/topics/<%= post.topicId %>/posts/<%= post.id %>/edit" class="btn btn-warning">Edit</a>
+            <% } %>
         </main>
 
         <% include ../static/partials/baseScripts.ejs %>
