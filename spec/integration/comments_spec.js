@@ -200,22 +200,30 @@ describe("routes : comments", () => {
                 password: "1234567890"
               })
                 .then((user) => {
-            request.get({           // mock authentication
+                    Comment.create({
+                        body: "ay caramba!",
+                        userId: user.id,
+                        postId: this.post.id
+                    })
+                    .then((comment) => {
+                        this.comment = comment;
+                        done();
+                    
+            request.get({           
               url: "http://localhost:3000/auth/fake",
               form: {
-                role: "member",     // mock authenticate as member user
-                userId: user.id
+                role: "member",     
+                userId: this.user.id
               }
-            },
-              (err, res, body) => {
+            },(err, res, body) => {
                 done();
-              }
-            );
+              });
             })
-            .catch((err) => {
-                console.log(err);
-                done();
-            })
+                    })
+                .catch((err) => {
+                    console.log(err);
+                    done();
+                });
           });
 
         describe("POST /topics/:topicId/posts/:postId/comments/:id/destroy", () => {
@@ -224,12 +232,12 @@ describe("routes : comments", () => {
                 .then((comments) => {
                     const commentCountBeforeDelete = comments.length;
 
-                    expect(commentCountBeforeDelete).toBe(1);
+                    expect(commentCountBeforeDelete).toBe(2);
 
                     request.post(
                         `${base}${this.topic.id}/posts/${this.post.id}/comments/${this.comment.id}/destroy`,
                         (err, res, body) => {
-                            expect(res.statusCode).toBe(302);
+                            expect(res.statusCode).toBe(401);
                     Comment.all()
                     .then((comments) => {
                         expect(err).toBeNull();
