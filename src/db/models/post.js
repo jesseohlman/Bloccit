@@ -40,6 +40,8 @@ module.exports = (sequelize, DataTypes) => {
       as:"flairs"
     });
     
-    return Post;
+    
   };
+
+  return Post;
 };
