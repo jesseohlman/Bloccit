@@ -3,9 +3,16 @@
 
  const flairController = require("../controllers/flairController");
 
- router.get("/topics/:topicId/flairs", flairController.index);
- router.get("/topics/:topicId/flairs/new", flairController.new);
- router.post("/topics/:topicId/flairs/create", flairController.create);
- 
+ router.get("/topics/:topicId/posts/:id/flairs/new", flairController.new);
+ router.post("/topics/:topicId/posts/:id/flairs/create", flairController.create);
+ router.get("/topics/:topicId/posts/:id/flairs/:flairId", flairController.show);
+ router.get("/topics/:topicId/posts/:id/flairs/:flairId/edit", flairController.edit);
+ router.post("/topics/:topicId/posts/:id/flairs/:flairId/update", flairController.update);
+ router.post("/topics/:topicId/posts/:id/flairs/:flairId/destroy", flairController.destroy);
+
+
+
+
+
 
  module.exports = router;

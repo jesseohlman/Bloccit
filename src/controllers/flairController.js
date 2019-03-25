@@ -2,7 +2,7 @@
 
  module.exports = {
 
-    index(req, res, next){
+    /*index(req, res, next){
         flairQueries.getAllFlairs((err, flairs) => {
             if(err){
                 res.redirect(500, "/");
@@ -10,10 +10,10 @@
                 res.render("flairs/index", {flairs});
               }
             });
-        },
+        },*/
 
     new(req, res, next){
-            res.render("flairs/new");
+            res.render("flairs/new", {topicId: req.params.topicId, postId: req.params.id});
         },
 
     create(req, res, next){
@@ -21,17 +21,60 @@
         let newFlair = {
             name: req.body.name,
             color: req.body.color,
-            topicId: req.params.id
+            postId: req.params.id
         };
 
         flairQueries.addFlair(newFlair, (err, flair) => {
             if(err){
-                res.redirect(500, "/topics/:topicId/flairs");
+                res.redirect(500, `/topics/${req.params.topicId}/posts/${req.params.id}`);
               } else {
-                res.redirect(303, `/topics/:topicId`);
+                res.redirect(303, `/topics/${req.params.topicId}/posts/${req.params.id}`);
               }
         });
     },
+
+    show(req, res, next){
+        flairQueries.getFlair(req.params.flairId, (err, flair) => {
+            if(err || flair == null){
+                res.redirect(404, "/");
+            } else {
+                res.render("flairs/show", {flair, topicId: req.params.topicId, postId: req.params.id});
+            }
+        });
+    },
+
+    edit(req, res, next){
+    flairQueries.getFlair(req.params.flairId, (err, flair) => {
+        if(err || flair == null){
+            res.redirect(404, "/");
+        } else {
+                res.render("flairs/edit", {flair, topicId: req.params.topicId, postId: req.params.id});
+            }
+        });
+
+        
+    },
+
+    update(req, res, next){
+        flairQueries.updateFlair(req, req.body, (err, flair) => {
+            if(err || flair == null){
+                res.redirect(401, `/topics/${req.params.topicId}/posts/${req.params.id}/flairs/${this.params.flairId}/edit`);
+            } else {
+                res.redirect(`/topics/${req.params.topicId}/posts/${req.params.id}`);
+            }
+        });
+    },
+
+    destroy(req, res, next){
+
+        flairQueries.deleteFlair(req.params.flairId, (err, flair) => {
+            if(err || flair == null){
+                res.redirect(401, `/topics/${req.params.topicId}/posts/${req.params.id}/flairs/${this.params.flairId}/edit`);
+            } else {
+                res.redirect(`/topics/${req.params.topicId}/posts/${req.params.id}`);
+            }
+        })
+    }
 
 
 }

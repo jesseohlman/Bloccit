@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <% include ../static/partials/head.ejs %>
+    </head>
+    <body>
+        <% include ../static/partials/navbar.ejs %>
+
+        <main>
+            <h1><%= flair.name %></h1>
+            <% if(currentUser && (currentUser.isAdmin() || currentUser.isOwner())){ %> 
+                <form style="display:initial" action="/topics/<%= topicId %>/posts/<%= postId %>/flairs/<%= flair.id %>/destroy" method="post">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            <% } %>
+            <p><%= flair.color %></p>
+            
+            <% if(currentUser && (currentUser.isAdmin() || currentUser.isOwner())){ %> 
+            <a href="/topics/<%= topicId %>/posts/<%= postId %>/flairs/<%= flair.id %>/edit" class="btn btn-warning">Edit</a>
+            <% } %>
+        </main>
+
+        <% include ../static/partials/baseScripts.ejs %>
+
+    </body>
+</html>

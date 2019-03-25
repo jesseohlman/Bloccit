@@ -24,14 +24,14 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       },
-      topicId: {
+      postId: {
         type: Sequelize.INTEGER,
         onDelete: "CASCADE",
         allowNull: false,
         references: {
-          model: "Topics",
+          model: "Posts",
           key: "id",
-          as: "topicId"
+          as: "postId"
         }
       }
     });
