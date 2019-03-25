@@ -3,7 +3,12 @@ const ApplicationPolicy = require("./application");
 module.exports = class TopicPolicy extends ApplicationPolicy {
 
     edit() {
-        return this._isAdmin(), this._isOwner();
+
+        if(this._isAdmin() || this._isOwner()){
+            return true
+        } else {
+            return false
+        }
     }
 
     update() {

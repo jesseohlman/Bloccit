@@ -27,13 +27,20 @@ describe("routes : posts", () => {
               .then((user) => {
                 this.user = user;
         
+                User.create({
+                  email: "tarman@tesla.com",
+                  password: "Rekkie4lyfe",
+                  role: "member"
+                }).then((user) => {
+
               Topic.create({
                 title: "Winter Games",
                 description: "Post your Winter Games stories.",
               posts: [{
                 title: "Snowball Fighting",
                 body: "So much snow!",
-                userId: this.user.id
+                userId: 2
+                //added one so the current user is not the owner
               }]
             }, {
               include: {
@@ -44,15 +51,28 @@ describe("routes : posts", () => {
               .then((topic) => {
                 this.topic = topic;
                 this.post = topic.posts[0];
+
+                request.get({
+                  url: "http://localhost:3000/auth/fake",
+                  form: {
+                    role: this.user.role,
+                    userId: this.user.id,
+                    email: this.user.email
+                  }
+                },
+                (err, res, body) => {
+                  done();
+                }) 
                 })
                 .catch((err) => {
                   console.log(err);
                   done();
+                      })
                     })
                   })
-                });
+                })
               });
-            });
+              
         
   
           describe("GET /topics/:topicId/posts/new", () => {
@@ -121,7 +141,7 @@ describe("routes : posts", () => {
               request.get(`${base}/${this.topic.id}/posts/${this.post.id}/edit`, (err, res, body) => {
                 expect(err).toBeNull();
                 expect(body).not.toContain("Edit Post");
-                expect(body).not.toContain("Snowball Fighting");
+                expect(body).toContain("Snowball Fighting");
                 done();
               });
             });
@@ -163,6 +183,28 @@ describe("routes : posts", () => {
               });
           });
         });
+
+        describe("POST /topics/:topicId/posts/:id/destroy", () => {
+
+          it("should not delete the post with the associated ID", (done) => {
+        
+            expect(this.post.id).toBe(1);
+            
+            request.post(`${base}/${this.topic.id}/posts/${this.post.id}/destroy`, (err, res, body) => {
+        
+              Post.findById(1)
+              //edit posts/show view so that non-owners/admins don't see 
+              //the delete option
+              .then((post) => {
+                expect(err).toBeNull();
+                expect(post).not.toBeNull();
+                done();
+              })
+            });
+          });
+        });
+
+      });
  //end member section
 
 
@@ -182,7 +224,6 @@ describe("routes : posts", () => {
       .then((user) => {
         this.user = user;
 
-
       Topic.create({
         title: "Winter Games",
         description: "Post your Winter Games stories.",
@@ -200,14 +241,27 @@ describe("routes : posts", () => {
       .then((topic) => {
         this.topic = topic;
         this.post = topic.posts[0];
+
+        request.get({
+          url: "http://localhost:3000/auth/fake",
+          form: {
+            role: this.user.role,
+            userId: this.user.id,
+            email: this.user.email
+          }
+        },
+        (err, res, body) => {
+          done();
+        }) 
         })
         .catch((err) => {
           console.log(err);
           done();
             })
           })
-        });
+        })
       });
+      
 
   describe("GET /topics/:topicId/posts/:id/edit", () => {
 
@@ -275,6 +329,25 @@ describe("GET /topics/:topicId/posts/:id", () => {
       });
   });
 });
+
+describe("POST /topics/:topicId/posts/:id/destroy", () => {
+
+  it("should delete the post with the associated ID", (done) => {
+
+    expect(this.post.id).toBe(1);
+    expect(this.post.userId).toBe(this.user.id);
+
+    request.post(`${base}/${this.topic.id}/posts/${this.post.id}/destroy`, (err, res, body) => {
+
+      Post.findById(1)
+      .then((post) => {
+        expect(err).toBeNull();
+        expect(post).toBeNull();
+        done();
+      })
+    });
+  });
+});
   
 });
 
@@ -284,22 +357,57 @@ describe("GET /topics/:topicId/posts/:id", () => {
  describe("admin user performing CRUD actions for Topic", () => {
 
   beforeEach((done) => {
-    User.create({
-      email: "admin@example.com",
-      password: "123456",
-      role: "admin"
+    this.topic;
+    this.post;
+    this.user;
+
+    sequelize.sync({force: true}).then((res) => {
+      User.create({
+        email: "starman@tesla.com",
+        password: "Trekkie4lyfe",
+        role: "admin"
+      })
+      .then((user) => {
+        this.user = user;
+
+      Topic.create({
+        title: "Winter Games",
+        description: "Post your Winter Games stories.",
+      posts: [{
+        title: "Snowball Fighting",
+        body: "So much snow!",
+        userId: this.user.id
+      }]
+    }, {
+      include: {
+       model: Post,
+       as: "posts"
+      }          
     })
-    .then((user) => {
-      request.get({
-        url: "http://localhost:3000/auth/fake",
-        form: {
-          role: user.role,
-          userId: user.id,
-          email: user.email
-        }
+      .then((topic) => {
+        this.topic = topic;
+        this.post = topic.posts[0];
+
+        request.get({
+          url: "http://localhost:3000/auth/fake",
+          form: {
+            role: this.user.role,
+            userId: this.user.id,
+            email: this.user.email
+          }
+        },
+        (err, res, body) => {
+          done();
+        }) 
+        })
+        .catch((err) => {
+          console.log(err);
+          done();
+            })
+          })
+        })
       });
-    });
-  });
+      
 
   describe("GET /topics/:topicId/posts/new", () => {
 
@@ -384,6 +492,7 @@ describe("POST /topics/:topicId/posts/create", () => {
           body: "I love watching them melt slowly."
         }
       }, (err, res, body) => {
+        expect(this.post.userId).toBe(this.user.id);
         expect(res.statusCode).toBe(302);
         done();
       });
@@ -393,7 +502,8 @@ describe("POST /topics/:topicId/posts/create", () => {
       const options = {
         url: `${base}/${this.topic.id}/posts/${this.post.id}/update`,
         form: {
-          title: "Snowman Building Competition"
+          title: "Snowman Building Competition",
+          body: "So much snow!"
         }
       };
       request.post(options, (err, res, body) => {
@@ -410,7 +520,6 @@ describe("POST /topics/:topicId/posts/create", () => {
       });
     });
   });
-
   
 describe("GET /topics/:topicId/posts/:id", () => {
 
@@ -424,11 +533,29 @@ describe("GET /topics/:topicId/posts/:id", () => {
   });
 });
 
+describe("POST /topics/:topicId/posts/:id/destroy", () => {
+
+  it("should delete the post with the associated ID", (done) => {
+
+    expect(this.post.id).toBe(1);
+
+    request.post(`${base}/${this.topic.id}/posts/${this.post.id}/destroy`, (err, res, body) => {
+
+      Post.findById(1)
+      .then((post) => {
+        expect(err).toBeNull();
+        expect(post).toBeNull();
+        done();
+      })
+    });
+  });
+});
 
  });
 //end admin section
 
 });
+
     
 
  

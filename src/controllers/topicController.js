@@ -60,7 +60,7 @@ module.exports = {
   destroy(req, res, next){
     topicQueries.deleteTopic(req, (err, topic) => {
       if(err){
-        res.redirect(err, `/topics/${req.params.id}`)
+        res.redirect(typeof err === "number" ? err : 500, `/topics/${req.params.id}`)
       } else {
         res.redirect(303, "/topics")
       }
@@ -72,15 +72,11 @@ module.exports = {
       if(err || topic == null){
         res.redirect(404, "/");
       } else {
-        console.log(req.user);
         const authorized = new Authorizer(req.user, topic).edit();
 
         if(authorized){
-          console.log("ssssssssssssssssssssssssssssssssssssssss")
           res.render("topics/edit", {topic});
         } else {
-          console.log("ffffffffffffffffffffffffffffffffffffffffff");
-          console.log(req.user.role);
           req.flash("You are not authorized to do that.");
           res.redirect(`/topics/${req.params.id}`)
         }
