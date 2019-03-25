@@ -193,5 +193,78 @@ describe("routes : comments", () => {
             
     }) // end of user suites
 
-    
+    describe("member performing crud actions on other members comments", () => {
+        beforeEach((done) => {
+            User.create({
+                email: "star@tesla.com",
+                password: "1234567890"
+              })
+                .then((user) => {
+            request.get({           // mock authentication
+              url: "http://localhost:3000/auth/fake",
+              form: {
+                role: "member",     // mock authenticate as member user
+                userId: user.id
+              }
+            },
+              (err, res, body) => {
+                done();
+              }
+            );
+            })
+            .catch((err) => {
+                console.log(err);
+                done();
+            })
+          });
+
+        describe("POST /topics/:topicId/posts/:postId/comments/:id/destroy", () => {
+            it("should not delete the comment with the associated ID", (done) => {
+                Comment.all()
+                .then((comments) => {
+                    const commentCountBeforeDelete = comments.length;
+
+                    expect(commentCountBeforeDelete).toBe(1);
+
+                    request.post(
+                        `${base}${this.topic.id}/posts/${this.post.id}/comments/${this.comment.id}/destroy`,
+                        (err, res, body) => {
+                            expect(res.statusCode).toBe(302);
+                    Comment.all()
+                    .then((comments) => {
+                        expect(err).toBeNull();
+                        expect(comments.length).toBe(commentCountBeforeDelete);
+                        done();
+                        });
+                    });
+                });
+            });
+        });
+    })
+
+    describe("Crud ations for admin", () => {
+
+        describe("POST /topics/:topicId/posts/:postId/comments/:id/destroy", () => {
+            it("should delete the comment with the associated ID", (done) => {
+                Comment.all()
+                .then((comments) => {
+                    const commentCountBeforeDelete = comments.length;
+
+                    expect(commentCountBeforeDelete).toBe(1);
+
+                    request.post(
+                        `${base}${this.topic.id}/posts/${this.post.id}/comments/${this.comment.id}/destroy`,
+                        (err, res, body) => {
+                            expect(res.statusCode).toBe(302);
+                    Comment.all()
+                    .then((comments) => {
+                        expect(err).toBeNull();
+                        expect(comments.length).toBe(commentCountBeforeDelete - 1);
+                        done();
+                        });
+                    });
+                });
+            });
+        });
+    })
 })
