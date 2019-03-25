@@ -22,6 +22,16 @@ module.exports = {
           as: "postId"
         }
       },
+      userId: {
+        type: Sequelize.INTEGER,
+        onDelete: "CASCADE",
+        allowNull: false,
+        references: {
+          model: "Users",
+          key: "id",
+          as: "userId"
+        }
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
