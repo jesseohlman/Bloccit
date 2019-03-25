@@ -105,7 +105,7 @@ describe("routes : comments", () => {
             it("should not delete the comment with the associated ID", (done) => {
                 Comment.all()
                 .then((comments) => {
-                    const commentCountBeforeDelete = coments.length;
+                    const commentCountBeforeDelete = comments.length;
 
                     expect(commentCountBeforeDelete).toBe(1);
 
@@ -171,7 +171,7 @@ describe("routes : comments", () => {
             it("should delete the comment with the associated ID", (done) => {
                 Comment.all()
                 .then((comments) => {
-                    const commentCountBeforeDelete = coments.length;
+                    const commentCountBeforeDelete = comments.length;
 
                     expect(commentCountBeforeDelete).toBe(1);
 
