@@ -69,7 +69,7 @@ describe("Comment", () => {
                       userId: this.user.id
                   })
                   .then((comment) => {
-                      expect(comment.body).toBe("The geoligical kind.");
+                      expect(comment.body).toBe("The geological kind.");
                       expect(comment.postId).toBe(this.post.id);
                       expect(comment.userId).toBe(this.user.id);
                       done();
@@ -126,7 +126,10 @@ describe("Comment", () => {
             });
           });
 
-          describe("#setPost()", (done) => {
+          describe("#setPost()", () => {
+
+            it("should associate a post and a comment together", (done) => {
+
               Post.create({
                   title: "Dress code on Proxima b",
                   body: "Spacesuit, space helmet, space boots, and space gloves",
@@ -143,17 +146,19 @@ describe("Comment", () => {
                   });
               })
           });
+        });
 
           describe("#getPost()", () => {
 
-            this.comment.getPost()
-            .then((associatedPost) => {
+            it("should return the associated post", (done) => {
 
-                this.comment.getgPost()
+            
+                this.comment.getPost()
                 .then((associatedPost) => {
                     expect(associatedPost.title).toBe("My first visit to Proxima Centauri b");
                     done();
+                
                 });
             });
-          });
         });
+    });
