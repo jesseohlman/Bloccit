@@ -3,6 +3,8 @@ const Topic = require("../../src/db/models").Topic;
 const Post = require("../../src/db/models").Post;
 const User = require("../../src/db/models").User;
 const Vote = require("../../src/db/models").Vote;
+const Comment = require("../../src/db/models").Comment;
+
 
 
 describe("Post", () => {
@@ -156,10 +158,21 @@ describe("Post", () => {
     });
 
     describe("#getPoints()", () => {
-        it("should return 0 votes, if there are no votes", (done) => {
-            expect(this.post.getPoints()).toBe(0);
-            done();
-          })
+        it("should return 0 votes if there are no votes", (done) => {
+
+            Post.findById(this.post.id, {
+                include: [
+                    {model: Comment, as: "comments", include: [
+                    {model: User }
+                    ]}, {model: Vote, as: "votes"}
+                    ]
+                })
+              .then((post) => {
+
+                  expect(post.getPoints()).toBe(0);
+                  done();
+                })
+        });
         
           it("should return the sum of all the votes on the post", (done) => {
               User.create({
@@ -170,20 +183,29 @@ describe("Post", () => {
                       value: 1,
                       userId: user.id,
                       postId: this.post.id
-                  })
+                  });
                   Vote.create({
                       value: 1,
                       userId: this.user.id,
                       postId: this.post.id
-                  }).then((vote) => {
-                   expect(this.post.getPoints()).toBe(2);
+                    });
+                  Post.findById(this.post.id, {
+                    include: [
+                    {model: Comment, as: "comments", include: [
+                    {model: User }
+                    ]}, {model: Vote, as: "votes"}
+                        ]
+                    })
+                  .then((post) => {
+                      console.log(this.post);
+                      expect(post.getPoints()).toBe(2);
                       done();
                     })
                     })
                     .catch((err) => {
                         console.log(err);
                         done();
-                    })
+                    });
               })
           });
     })

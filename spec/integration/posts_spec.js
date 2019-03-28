@@ -332,7 +332,7 @@ describe("GET /topics/:topicId/posts/:id", () => {
   });
     it("should show a 0 for votes, if there are no votes", (done) => {
       request.get(`${base}/${this.topic.id}/posts/${this.post.id}`, (err, res, body) => {
-        expect(body).toContain(2);
+        expect(body).toContain("0");
         done();
       })
     })
@@ -346,14 +346,14 @@ describe("GET /topics/:topicId/posts/:id", () => {
                 value: 1,
                 userId: user.id,
                 postId: this.post.id
-            })
+            });
             Vote.create({
                 value: 1,
                 userId: this.user.id,
                 postId: this.post.id
             }).then((vote) => {
               request.get(`${base}/${this.topic.id}/posts/${this.post.id}`, (err, res, body) => {
-                expect(body).toContain(2);
+                expect(body).toContain("2");
                 done();
               })
               })

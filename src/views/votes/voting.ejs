@@ -6,14 +6,14 @@
     <div>
         <a href="/topics/<%= post.topicId %>/posts/<%= post.id %>/votes/downvote">&#9660;</a>
     </div>
-    <div>You upvoted this post</div>
+    
     <div>
-        <!--<% if(1) { %>
+        <% if(post.hasUpvoteFor(currentUser.id)) { %>
             <p>You upvoted this post</p>
         <% } %>
         <% if(post.hasDownvoteFor(currentUser.id)) { %>
             <p>You downvoted this post</p>
         <% } %>
-        -->
+        
     </div>
 </div>

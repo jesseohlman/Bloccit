@@ -55,19 +55,19 @@ module.exports = (sequelize, DataTypes) => {
         };
 
         Post.prototype.hasUpvoteFor = function(userId){
-          const didVote = this.votes.filter((v) => { return v.userId === userId });
-          if(didVote[0] === -1 || !didVote[0]){
-            return false;
+          const didVote = this.votes.map((v) => { if(v.userId === userId) return v; });
+          if(didVote[0].value === 1 ){
+            return true;
           } 
-          return true;
+          return false;
         };
 
         Post.prototype.hasDownvoteFor = function(userId){
-          const didVote = this.votes.filter((v) => { return v.userId === userId });
-          if(didVote[0] === 1 || !didVote[0]){
-            return false;
+          const didVote = this.votes.map((v) => { if(v.userId === userId) return v; });
+          if(didVote[0].value === -1){
+            return true;
           } 
-          return true;
+          return false;
         }
   };
 
