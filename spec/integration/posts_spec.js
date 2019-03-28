@@ -6,6 +6,8 @@ const sequelize = require("../../src/db/models/index").sequelize;
 const Topic = require("../../src/db/models").Topic;
 const Post = require("../../src/db/models").Post;
 const User = require("../../src/db/models").User;
+const Vote = require("../../src/db/models").Vote;
+
 
 describe("routes : posts", () => {
 
@@ -328,6 +330,74 @@ describe("GET /topics/:topicId/posts/:id", () => {
           done();
       });
   });
+    it("should show a 0 for votes, if there are no votes", (done) => {
+      request.get(`${base}/${this.topic.id}/posts/${this.post.id}`, (err, res, body) => {
+        expect(body).toContain(2);
+        done();
+      })
+    })
+  
+    it("should show the sum of all the votes on the post", (done) => {
+        User.create({
+            email: "usaine@gmail.com",
+            password: "borgon4"
+          }).then((user) => {
+            Vote.create({
+                value: 1,
+                userId: user.id,
+                postId: this.post.id
+            })
+            Vote.create({
+                value: 1,
+                userId: this.user.id,
+                postId: this.post.id
+            }).then((vote) => {
+              request.get(`${base}/${this.topic.id}/posts/${this.post.id}`, (err, res, body) => {
+                expect(body).toContain(2);
+                done();
+              })
+              })
+              .catch((err) => {
+                  console.log(err);
+                  done();
+              })
+        })
+    });
+
+      it("should show 'You upvoted this post' if the user did", (done) => {
+        Vote.create({
+          value: 1,
+          userId: this.user.id,
+          postId: this.post.id
+      }).then((vote) => {
+        request.get(`${base}/${this.topic.id}/posts/${this.post.id}`, (err, res, body) => {
+          expect(body).toContain("You upvoted this post");
+          done();
+        })
+        })
+        .catch((err) => {
+            console.log(err);
+            done();
+        })
+      });
+
+      it("should show 'You downvoted this post' if the user did", (done) => {
+        Vote.create({
+          value: -1,
+          userId: this.user.id,
+          postId: this.post.id
+      }).then((vote) => {
+        request.get(`${base}/${this.topic.id}/posts/${this.post.id}`, (err, res, body) => {
+          expect(body).toContain("You downvoted this post");
+          done();
+        })
+        })
+        .catch((err) => {
+            console.log(err);
+            done();
+        })
+      });
+
 });
 
 describe("POST /topics/:topicId/posts/:id/destroy", () => {
@@ -553,6 +623,7 @@ describe("POST /topics/:topicId/posts/:id/destroy", () => {
 
  });
 //end admin section
+
 
 });
 

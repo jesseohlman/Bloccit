@@ -8,9 +8,9 @@
 
         <main class="container">
             <% include ../static/partials/messages.ejs %>
-
             <div style="display: flex; align-items:center;">
                 <% if(currentUser) { %>
+                    <div>You upvoted this post</div>
                     <% include ../votes/voting.ejs %>
                 <% } %>
                 <h1><%= post.title %></h1>

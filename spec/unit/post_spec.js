@@ -2,6 +2,8 @@ const sequelize = require("../../src/db/models/index").sequelize;
 const Topic = require("../../src/db/models").Topic;
 const Post = require("../../src/db/models").Post;
 const User = require("../../src/db/models").User;
+const Vote = require("../../src/db/models").Vote;
+
 
 describe("Post", () => {
 
@@ -152,4 +154,104 @@ describe("Post", () => {
             });
         });
     });
-});
+
+    describe("#getPoints()", () => {
+        it("should return 0 votes, if there are no votes", (done) => {
+            expect(this.post.getPoints()).toBe(0);
+            done();
+          })
+        
+          it("should return the sum of all the votes on the post", (done) => {
+              User.create({
+                  email: "usaine@gmail.com",
+                  password: "borgon4"
+                }).then((user) => {
+                  Vote.create({
+                      value: 1,
+                      userId: user.id,
+                      postId: this.post.id
+                  })
+                  Vote.create({
+                      value: 1,
+                      userId: this.user.id,
+                      postId: this.post.id
+                  }).then((vote) => {
+                   expect(this.post.getPoints()).toBe(2);
+                      done();
+                    })
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        done();
+                    })
+              })
+          });
+    })
+
+/*   describe("#hasUpvoteFor(userId)", () => {
+        it("should return false if the user didn't upvote the post", (done) => {
+            expect(this.post.hasUpvoteFor(this.user.id)).toBe(false);
+            done();
+        });
+
+        it("should return true if the user with the provided id has upvoted the post", (done) => {
+            Vote.create({
+                value: 1,
+                userId: this.user.id,
+                postId: this.post.id
+            })
+            expect(this.post.hasUpvoteFor(this.user.id)).toBe(true);
+            done();
+        });
+
+        it("should return false if the user downvoted the post", (done) => {
+            Vote.create({
+                value: -1,
+                userId: this.user.id,
+                postId: this.post.id
+            }).then((vote) => {
+                expect(this.post.hasUpvoteFor(this.user.id)).toBe(false);
+                done();
+            }).catch((err) => {
+                console.log(err);
+                done();
+                })
+        });
+    });
+
+
+    describe("#hasDownvoteFor(userId)", () => {
+        it("should return false if the user didn't downvote the post", (done) => {
+            expect(this.post.hasDownvoteFor(this.user.id)).toBe(false);
+            done();
+        });
+
+        it("should return true if the user with the provided id has downvoted the post", (done) => {
+            Vote.create({
+                value: -1,
+                userId: this.user.id,
+                postId: this.post.id
+            }).then((vote) => {
+            expect(this.post.hasUpvoteFor(this.user.id)).toBe(true);
+            done();
+        })
+        .catch((err) => {
+            console.log(err);
+            done();
+        })
+        });
+
+        it("should return false if the user upvoted the post", (done) => {
+            Vote.create({
+                value: 1,
+                userId: this.user.id,
+                postId: this.post.id
+            }).then((vote) => {
+                expect(this.post.hasDownvoteFor(this.user.id)).toBe(false);
+                done();
+            }).catch((err) => {
+                console.log(err);
+                done();
+                })
+        });
+    });*/

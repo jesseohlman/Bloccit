@@ -92,7 +92,7 @@ describe("routes : votes", () => {
             });
         });
       });
-  });
+  }); //end guest
 
   describe("signed in user voting on a post", () => {
       beforeEach((done) => {
@@ -130,6 +130,21 @@ describe("routes : votes", () => {
               }
             );
           });
+
+          it("should not create a vote if the votes value is not 1 or -1", (done) => {
+            Vote.create({
+                value: 2,
+                userId: this.user.id,
+                postId: this.post.id
+            }).then((vote) => {
+                expect(vote).toBeNull();
+                done();
+            })
+            .catch((err) => {
+                expect(err);
+                done();
+            })
+        })
       });
 
       describe("GET /topics/:topicId/posts/:postId/votes/downvote", () => {
@@ -160,8 +175,62 @@ describe("routes : votes", () => {
             }
           );
         });
+
+        it("should not create a vote if the votes value is not 1 or -1", (done) => {
+            Vote.create({
+                value: 2,
+                userId: this.user.id,
+                postId: this.post.id
+            }).then((vote) => {
+                expect(vote).toBeNull();
+                done();
+            })
+            .catch((err) => {
+                expect(err);
+                done();
+            })
+        })
+
+        it("should not allow a user to vote more than once on an item", (done) => {
+            const options = {
+                url: `${base}${this.topic.id}/posts/${this.post.id}/votes/downvote`
+              };
+              request.get(options,
+                (err, res, body) => {
+                  Vote.findOne({
+                    where: {
+                      userId: this.user.id,
+                      postId: this.post.id
+                    }
+                  }).then((vote) => {
+
+                    const options = {
+                        url: `${base}${this.topic.id}/posts/${this.post.id}/votes/downvote`
+                      };
+                      request.get(options,
+                        (err, res, body) => {
+                          Vote.findAll({
+                            where: {
+                              userId: this.user.id,
+                              postId: this.post.id
+                            }
+                          })
+                          .then((vote) => {
+                              expect(vote.length).not.toBe(2);
+                              done();
+                                  })
+                                  .catch((err) => {
+                                      console.log(err);
+                                      done();
+                                  });
+                              });
+                          })
+                  });
+        });
       });
  
-    });
+    }); //end signed in user
+
     
+
   })
