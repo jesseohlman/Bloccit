@@ -127,13 +127,9 @@ describe("Comment", () => {
           });
 
           describe("#setPost()", () => {
-<<<<<<< HEAD
-              it("should associate a post with a comment", (done) => {
-=======
 
             it("should associate a post and a comment together", (done) => {
 
->>>>>>> 78fba2eaec8e5b7d53e68ea9b3a9ba945b52162f
               Post.create({
                   title: "Dress code on Proxima b",
                   body: "Spacesuit, space helmet, space boots, and space gloves",
@@ -158,14 +154,10 @@ describe("Comment", () => {
         });
 
           describe("#getPost()", () => {
-<<<<<<< HEAD
-              it("should retrieve the post of connected to the comment", (done) => {
-=======
 
             it("should return the associated post", (done) => {
 
             
->>>>>>> 78fba2eaec8e5b7d53e68ea9b3a9ba945b52162f
                 this.comment.getPost()
                 .then((associatedPost) => {
                     expect(associatedPost.title).toBe("My first visit to Proxima Centauri b");
@@ -174,9 +166,4 @@ describe("Comment", () => {
                 });
             });
         });
-<<<<<<< HEAD
-         
-});
-=======
-    });
->>>>>>> 78fba2eaec8e5b7d53e68ea9b3a9ba945b52162f
+
