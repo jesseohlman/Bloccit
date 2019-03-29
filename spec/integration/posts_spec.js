@@ -330,7 +330,7 @@ describe("GET /topics/:topicId/posts/:id", () => {
           done();
       });
   });
-    it("should show a 0 for votes, if there are no votes", (done) => {
+/*    it("should show a 0 for votes, if there are no votes", (done) => {
       request.get(`${base}/${this.topic.id}/posts/${this.post.id}`, (err, res, body) => {
         expect(body).toContain("0");
         done();
@@ -396,7 +396,7 @@ describe("GET /topics/:topicId/posts/:id", () => {
             console.log(err);
             done();
         })
-      });
+      });*/
 
 });
 

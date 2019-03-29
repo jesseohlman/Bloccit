@@ -183,12 +183,12 @@ describe("Post", () => {
                       value: 1,
                       userId: user.id,
                       postId: this.post.id
-                  });
+                  }).then((vote) => {
                   Vote.create({
                       value: 1,
                       userId: this.user.id,
                       postId: this.post.id
-                    });
+                    }).then((vote) => {
                   Post.findById(this.post.id, {
                     include: [
                     {model: Comment, as: "comments", include: [
@@ -197,7 +197,6 @@ describe("Post", () => {
                         ]
                     })
                   .then((post) => {
-                      console.log(this.post);
                       expect(post.getPoints()).toBe(2);
                       done();
                     })
@@ -206,14 +205,28 @@ describe("Post", () => {
                         console.log(err);
                         done();
                     });
+                })
+                })
               })
           });
-    })
+    
 
-/*   describe("#hasUpvoteFor(userId)", () => {
+   describe("#hasUpvoteFor(userId)", () => {
         it("should return false if the user didn't upvote the post", (done) => {
-            expect(this.post.hasUpvoteFor(this.user.id)).toBe(false);
+            Post.findById(this.post.id, {
+                include: [
+                {model: Comment, as: "comments", include: [
+                {model: User }
+                ]}, {model: Vote, as: "votes"}
+                    ]
+                }).then((post) => {
+            expect(post.hasUpvoteFor(this.user.id)).toBe(false);
             done();
+        })
+        .catch((err) => {
+            console.log(err);
+            done();
+        })
         });
 
         it("should return true if the user with the provided id has upvoted the post", (done) => {
@@ -221,9 +234,22 @@ describe("Post", () => {
                 value: 1,
                 userId: this.user.id,
                 postId: this.post.id
-            })
-            expect(this.post.hasUpvoteFor(this.user.id)).toBe(true);
+            }).then((vote) => {
+                Post.findById(this.post.id, {
+                    include: [
+                    {model: Comment, as: "comments", include: [
+                    {model: User }
+                    ]}, {model: Vote, as: "votes"}
+                        ]
+                    }).then((post) => {
+            expect(post.hasUpvoteFor(this.user.id)).toBe(true);
             done();
+            })
+            .catch((err) => {
+                console.log(err);
+                done();
+            })
+        })
         });
 
         it("should return false if the user downvoted the post", (done) => {
@@ -232,20 +258,41 @@ describe("Post", () => {
                 userId: this.user.id,
                 postId: this.post.id
             }).then((vote) => {
+                Post.findById(this.post.id, {
+                    include: [
+                    {model: Comment, as: "comments", include: [
+                    {model: User }
+                    ]}, {model: Vote, as: "votes"}
+                        ]
+                    })
+                    .then((post) => {
                 expect(this.post.hasUpvoteFor(this.user.id)).toBe(false);
                 done();
             }).catch((err) => {
                 console.log(err);
                 done();
                 })
+            })
         });
     });
 
 
     describe("#hasDownvoteFor(userId)", () => {
         it("should return false if the user didn't downvote the post", (done) => {
-            expect(this.post.hasDownvoteFor(this.user.id)).toBe(false);
+            Post.findById(this.post.id, {
+                include: [
+                {model: Comment, as: "comments", include: [
+                {model: User }
+                ]}, {model: Vote, as: "votes"}
+                    ]
+                }).then((post) => {
+            expect(post.hasDownvoteFor(this.user.id)).toBe(false);
             done();
+        })
+        .catch((err) => {
+            console.log(err);
+            done();
+        })
         });
 
         it("should return true if the user with the provided id has downvoted the post", (done) => {
@@ -254,12 +301,20 @@ describe("Post", () => {
                 userId: this.user.id,
                 postId: this.post.id
             }).then((vote) => {
-            expect(this.post.hasUpvoteFor(this.user.id)).toBe(true);
+                Post.findById(this.post.id, {
+                    include: [
+                    {model: Comment, as: "comments", include: [
+                    {model: User }
+                    ]}, {model: Vote, as: "votes"}
+                        ]
+                    }).then((post) => {
+            expect(post.hasDownvoteFor(this.user.id)).toBe(true);
             done();
-        })
-        .catch((err) => {
-            console.log(err);
-            done();
+            })
+            .catch((err) => {
+                console.log(err);
+                done();
+            })
         })
         });
 
@@ -269,11 +324,21 @@ describe("Post", () => {
                 userId: this.user.id,
                 postId: this.post.id
             }).then((vote) => {
+                Post.findById(this.post.id, {
+                    include: [
+                    {model: Comment, as: "comments", include: [
+                    {model: User }
+                    ]}, {model: Vote, as: "votes"}
+                        ]
+                    })
+                    .then((post) => {
                 expect(this.post.hasDownvoteFor(this.user.id)).toBe(false);
                 done();
             }).catch((err) => {
                 console.log(err);
                 done();
                 })
+            })
         });
-    });*/
+    })
+})
