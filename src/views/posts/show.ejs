@@ -6,7 +6,16 @@
     <body>
         <% include ../static/partials/navbar.ejs %>
 
-        <main>
+        <main class="container">
+            <% include ../static/partials/messages.ejs %>
+
+            <div style="display: flex; align-items:center;">
+                <% if(currentUser) { %>
+                    <% include ../votes/voting.ejs %>
+                <% } %>
+                <h1><%= post.title %></h1>
+            </div>
+            
             <h1><%= post.title %></h1>
             <% if(currentUser && (currentUser.isAdmin() || currentUser.isOwner())){ %> 
                 <form style="display:initial" action="/topics/<%= post.topicId %>/posts/<%= post.id %>/destroy" method="post">
