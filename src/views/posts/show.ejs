@@ -25,13 +25,14 @@
                 <% } %>
             </section>
 
+
             <section id="comment-list">
-                <% if(post.comments) { %>
-                    <% post.comments.forEach((comment) => { %>
                     
-                    <%- include("../comments/show.ejs", {comment}) %>
-                <% }) %>
-            <% } %>
+                    <% if(post.comments) { %>
+                     <% post.comments.forEach((comment) => { %>
+                        <%- include("../comments/show.ejs", {comment}) %>
+                      <% }) %>
+                    <% } %>
             </section>
         </main>
 

@@ -126,13 +126,13 @@ describe("routes : comments", () => {
     });
     //end guest suites
 
-    describe("signed in user performing crud actions for Comment", () => {
+    describe("signed in user performing crud actions on his comments Comment", () => {
 
-        beforeEach((done) => {    // before each suite in this context
-            request.get({           // mock authentication
+        beforeEach((done) => {    
+            request.get({           
               url: "http://localhost:3000/auth/fake",
               form: {
-                role: "member",     // mock authenticate as member user
+                role: "member",     
                 userId: this.user.id
               }
             },
