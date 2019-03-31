@@ -6,6 +6,8 @@ const User = require("../../src/db/models").User;
 const Post = require("../../src/db/models").Post;
 const Topic = require("../../src/db/models").Topic;
 const Comment = require("../../src/db/models").Comment;
+const Favorite = require("../../src/db/models").Favorite;
+
 
 
 describe("routes : users", () => {
@@ -130,7 +132,13 @@ describe("routes : users", () => {
                 })
                 .then((res) => {
                     this.comment = res;
-                    done();
+                    Favorite.create({
+                        userId: this.user.id,
+                        postId: this.post.id
+                    })
+                    .then((favorite) => {
+                        done();
+                    })
                 })
                 })
             })
@@ -141,6 +149,8 @@ describe("routes : users", () => {
             request.get(`${base}${this.user.id}`, (err, res, body) => {
                 expect(body).toContain("Snowball Fighting");
                 expect(body).toContain("This comment is alright.");
+                expect(body).toContain("Favorited Post:");
+
                 done();
 
             });
