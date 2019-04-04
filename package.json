@@ -5,7 +5,7 @@
   "main": "\u001b[D\u001bsrc/server.js)",
   "scripts": {
     "test": "set NODE_ENV=test&& jasmine",
-    "start": "nodemon src/server.js"
+    "start": "node src/server.js"
   },
   "author": "",
   "license": "ISC",
