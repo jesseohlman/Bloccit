@@ -20,6 +20,11 @@
                     <button type="submit" class="btn btn-danger">Delete</button>
                 </form>
             <% } %>
+
+            <% if(currentUser) { %> 
+                <% include ../favorites/favoriting.ejs %>
+            <% } %>
+            
             <p><%= post.body %></p>
             
             <% if(currentUser && (currentUser.isAdmin() || currentUser.isOwner())){ %> 
@@ -32,13 +37,14 @@
                 <% } %>
             </section>
 
+
             <section id="comment-list">
-                <% if(post.comments) { %>
-                    <% post.comments.forEach((comment) => { %>
                     
-                    <%- include("../comments/show.ejs", {comment}) %>
-                <% }) %>
-            <% } %>
+                    <% if(post.comments) { %>
+                     <% post.comments.forEach((comment) => { %>
+                        <%- include("../comments/show.ejs", {comment}) %>
+                      <% }) %>
+                    <% } %>
             </section>
         </main>
 

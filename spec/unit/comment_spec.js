@@ -144,6 +144,11 @@ describe("Comment", () => {
                       expect(comment.postId).toBe(newPost.id);
                       done();
                   });
+                })
+                .catch((err) => {
+                    console.log(err);
+                    done();
+                })
               })
           });
         });
@@ -161,4 +166,4 @@ describe("Comment", () => {
                 });
             });
         });
-    });
+

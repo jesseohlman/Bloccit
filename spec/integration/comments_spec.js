@@ -126,13 +126,13 @@ describe("routes : comments", () => {
     });
     //end guest suites
 
-    describe("signed in user performing crud actions for Comment", () => {
+    describe("signed in user performing crud actions on his comments Comment", () => {
 
-        beforeEach((done) => {    // before each suite in this context
-            request.get({           // mock authentication
+        beforeEach((done) => {    
+            request.get({           
               url: "http://localhost:3000/auth/fake",
               form: {
-                role: "member",     // mock authenticate as member user
+                role: "member",     
                 userId: this.user.id
               }
             },
@@ -193,5 +193,86 @@ describe("routes : comments", () => {
             
     }) // end of user suites
 
-    
+    describe("member performing crud actions on other members comments", () => {
+        beforeEach((done) => {
+            User.create({
+                email: "star@tesla.com",
+                password: "1234567890"
+              })
+                .then((user) => {
+                    Comment.create({
+                        body: "ay caramba!",
+                        userId: user.id,
+                        postId: this.post.id
+                    })
+                    .then((comment) => {
+                        this.comment = comment;
+                        done();
+                    
+            request.get({           
+              url: "http://localhost:3000/auth/fake",
+              form: {
+                role: "member",     
+                userId: this.user.id
+              }
+            },(err, res, body) => {
+                done();
+              });
+            })
+                    })
+                .catch((err) => {
+                    console.log(err);
+                    done();
+                });
+          });
+
+        describe("POST /topics/:topicId/posts/:postId/comments/:id/destroy", () => {
+            it("should not delete the comment with the associated ID", (done) => {
+                Comment.all()
+                .then((comments) => {
+                    const commentCountBeforeDelete = comments.length;
+
+                    expect(commentCountBeforeDelete).toBe(2);
+
+                    request.post(
+                        `${base}${this.topic.id}/posts/${this.post.id}/comments/${this.comment.id}/destroy`,
+                        (err, res, body) => {
+                            expect(res.statusCode).toBe(401);
+                    Comment.all()
+                    .then((comments) => {
+                        expect(err).toBeNull();
+                        expect(comments.length).toBe(commentCountBeforeDelete);
+                        done();
+                        });
+                    });
+                });
+            });
+        });
+    })
+
+    describe("Crud ations for admin", () => {
+
+        describe("POST /topics/:topicId/posts/:postId/comments/:id/destroy", () => {
+            it("should delete the comment with the associated ID", (done) => {
+                Comment.all()
+                .then((comments) => {
+                    const commentCountBeforeDelete = comments.length;
+
+                    expect(commentCountBeforeDelete).toBe(1);
+
+                    request.post(
+                        `${base}${this.topic.id}/posts/${this.post.id}/comments/${this.comment.id}/destroy`,
+                        (err, res, body) => {
+                            expect(res.statusCode).toBe(302);
+                    Comment.all()
+                    .then((comments) => {
+                        expect(err).toBeNull();
+                        expect(comments.length).toBe(commentCountBeforeDelete - 1);
+                        done();
+                        });
+                    });
+                });
+            });
+        });
+    })
 })
