@@ -158,7 +158,7 @@ describe("Post", () => {
     });
 
     describe("#getPoints()", () => {
-        it("should return 0 votes if there are no votes", (done) => {
+        it("should return 1 vote after post creation", (done) => {
 
             Post.findById(this.post.id, {
                 include: [
@@ -169,7 +169,7 @@ describe("Post", () => {
                 })
               .then((post) => {
 
-                  expect(post.getPoints()).toBe(0);
+                  expect(post.getPoints()).toBe(1);
                   done();
                 })
         });
@@ -197,7 +197,7 @@ describe("Post", () => {
                         ]
                     })
                   .then((post) => {
-                      expect(post.getPoints()).toBe(2);
+                      expect(post.getPoints()).toBe(3);
                       done();
                     })
                     })
@@ -220,8 +220,14 @@ describe("Post", () => {
                 ]}, {model: Vote, as: "votes"}
                     ]
                 }).then((post) => {
-            expect(post.hasUpvoteFor(this.user.id)).toBe(false);
-            done();
+                    User.create({
+                        email: "timmy@gmail.com",
+                        password: "1234567890"
+                    })
+                    .then((user) => {
+                        expect(post.hasUpvoteFor(user.id)).toBe(false);
+                        done();
+                    })
         })
         .catch((err) => {
             console.log(err);
@@ -295,10 +301,16 @@ describe("Post", () => {
         })
         });
 
+
         it("should return true if the user with the provided id has downvoted the post", (done) => {
+            User.create({
+                email: "ballonman@gmail.com",
+                password: "sovdjskbf44"
+            }).then((user) => {
+            
             Vote.create({
                 value: -1,
-                userId: this.user.id,
+                userId: user.id,
                 postId: this.post.id
             }).then((vote) => {
                 Post.findById(this.post.id, {
@@ -308,13 +320,14 @@ describe("Post", () => {
                     ]}, {model: Vote, as: "votes"}
                         ]
                     }).then((post) => {
-            expect(post.hasDownvoteFor(this.user.id)).toBe(true);
+            expect(post.hasDownvoteFor(user.id)).toBe(true);
             done();
             })
             .catch((err) => {
                 console.log(err);
                 done();
             })
+        })
         })
         });
 

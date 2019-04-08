@@ -151,7 +151,7 @@ describe("Comment", () => {
                 })
               })
           });
-        });
+ 
 
           describe("#getPost()", () => {
 
@@ -166,4 +166,5 @@ describe("Comment", () => {
                 });
             });
         });
+    });
 

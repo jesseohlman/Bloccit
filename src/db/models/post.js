@@ -52,7 +52,7 @@ module.exports = (sequelize, DataTypes) => {
 
     Post.prototype.getPoints = function(){
 
-          if(this.votes.length === 0) return 0
+          if(this.votes.length === 0) return 0;
      
           return this.votes
             .map((v) => { return v.value })
@@ -63,40 +63,33 @@ module.exports = (sequelize, DataTypes) => {
           if(!this.votes) return false;
           
           const didVote = this.votes.map((v) => { if(v.userId === userId) return v; });
-          if(didVote[0]){
-
-            if(didVote[0].value === 1 ){
+          if(didVote[0] && didVote[0].value === 1 ){
               return true;
             } else {
-              return false;
-              }
-          } else {
             return false;
           }
-          
-          
         };
 
         Post.prototype.hasDownvoteFor = function(userId){
           if(!this.votes) return false;
 
-          const didVote = this.votes.map((v) => { if(v.userId === userId) return v; });
-          if(didVote[0]){
-
-            if(didVote[0].value === -1 ){
+          
+          const didVote = this.votes.filter((v) =>  v.userId === userId);
+          //const didVote = this.votes.map((v) => { if(v.userId === userId) return v; });
+          console.log(`didvote[0] ${didVote[0]}`); console.log(`didvote: ${didVote}`);
+          if((didVote[0] !== 'undefined' || didVote !== 'undefined') && (didVote[0].value === -1 || didVote.value === -1)){
               return true;
-            } else {
-              return false;
-              }
           } else {
             return false;
           }
-        }
+        };
+
     Post.prototype.getFavoriteFor = function(userId){
       return this.favorites.find((favorite) => {
         return favorite.userId == userId
       });
-    }
+    };
+
 
     Post.afterCreate((post, callback) => {
       return models.Favorite.create({
