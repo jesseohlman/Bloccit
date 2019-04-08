@@ -75,8 +75,7 @@ module.exports = (sequelize, DataTypes) => {
 
           
           const didVote = this.votes.filter((v) =>  v.userId === userId);
-          //const didVote = this.votes.map((v) => { if(v.userId === userId) return v; });
-          console.log(`didvote[0] ${didVote[0]}`); console.log(`didvote: ${didVote}`);
+         
           if((didVote[0] !== 'undefined' || didVote !== 'undefined') && (didVote[0].value === -1 || didVote.value === -1)){
               return true;
           } else {
